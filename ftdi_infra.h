@@ -41,7 +41,7 @@
 #include<windows.h>
 #endif
 
-#ifdef __linux
+#if defined (__linux__) || defined (__APPLE__)
 #include<dlfcn.h>	/*for dlopen() & dlsym()*/
 #include<stdarg.h>	/*for va_start() & va_arg()*/
 #include<unistd.h>	/*for Sleep()*/
@@ -154,7 +154,7 @@ status=FT_INVALID_PARAMETER ; return(status);}else{;}};
 #endif
 
 /* sleep function abstraction */
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	#define INFRA_SLEEP(exp)			usleep((exp)*1000);
 #else
 	#define INFRA_SLEEP(exp)			Sleep(exp);
@@ -192,8 +192,6 @@ status=FT_INVALID_PARAMETER ; return(status);}else{;}};
 	typedef signed char   int8;
 	typedef signed short  int16;
 	typedef signed long long int64;
-
-	typedef unsigned char	bool;
 
 	#ifdef __x86_64__
 		typedef unsigned int   uint32;

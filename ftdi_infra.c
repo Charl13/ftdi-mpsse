@@ -32,13 +32,17 @@
 /******************************************************************************/
 #include "ftdi_infra.h"		/*portable infrastructure(datatypes, libraries, etc)*/
 
+#if defined(__linux__) || defined(__APPLE__)
+#include <dlfcn.h>
+#endif
+
 
 /******************************************************************************/
 /*								Macro defines					  			  */
 /******************************************************************************/
 
 
-#ifdef __linux
+#if defined(__linux__) || defined(__APPLE__)
 	#define GET_FUNC(libHandle,symbol)	dlsym(libHandle,symbol)
 	/* Macro to check if dlsym returned a correctly */
 	#define CHECK_SYMBOL(exp) {if(dlerror() != NULL)\
@@ -63,7 +67,7 @@
 	HANDLE hdll_d2xx;
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	void *hdll_d2xx;
 #endif
 
@@ -179,7 +183,7 @@ FT_STATUS Infra_DbgPrintStatus(FT_STATUS status)
 			DBG(MSG_ERR, "Status: FT_OTHER_ERROR\n");
 		break;
 
-#ifndef __linux
+#if defined(_WIN32)
 /* gives compilation error in linux - not defined in D2XX for linux */
 		case FT_DEVICE_LIST_NOT_READY:
 			DBG(MSG_ERR, "Status: FT_DEVICE_LIST_NOT_READY\n");
@@ -253,7 +257,7 @@ FTDI_API void Init_libMPSSE(void)
 	FN_ENTER;
 
 /* Load D2XX dynamic library */
-#ifdef __linux
+#if defined(__linux__) || defined(__APPLE__)
 	hdll_d2xx = dlopen("libftd2xx.so",RTLD_LAZY);
 	CHECK_NULL(hdll_d2xx);
 #else
